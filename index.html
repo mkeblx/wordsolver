@@ -1,74 +1,106 @@
 <!doctype html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <title>Word Solver</title>
 </head>
 <body>
+
+<h1>Word Solver</h1>
+
+<p>Enter a word with a '_' to find words:</p>
+
+<input type="text" id="word" value="_eezerst">
+
+<input type="button" value="Find Words" id="btn">
+
+<br><br>
+<textarea id="output" rows="8" cols="30"></textarea>
 
 
 <script src="word-dictionary.js"></script>
 <script id="test">
-// WORD HERE
-var word = 'goo_er';
 
+var $ = document.getElementById.bind(document);
 
-var letters = 'abcdefghijklmnopqrstuvwxyz';
+var wordEl = $('word');
+var outputEl = $('output');
+var findBtn = $('btn');
 
-var candidates = [];
+findBtn.addEventListener('click', function(e) {
+  process();
+});
 
-// generate all letter replacement candidates
-for (let i = 0; i < letters.length; i++) {
-  let letter = letters[i];
-  let cand = word;
-  cand = cand.replace('_', letter);
-  candidates.push(cand);
+var word;
 
-  // And, reverse
-  candidates.push(reverse(cand));
-}
+function process() {
+  word = wordEl.value;
 
-// reverse string
-// "cat" => ['c','a','t'] => ['t','a','c'] => "tac"
-function reverse(string) {
-	return string.split('').reverse().join('');
-}
+  outputEl.value = '';
 
-function rotate(string, n) {
-	if (n === 0) {
-		return string;
-	}
-	if (n < 0) {
-		return string;
-	}
-	return string.substring(n) + string.substr(0,n);
-}
+  var letters = 'abcdefghijklmnopqrstuvwxyz';
 
-let _candidates = [];
-for (let i = 0; i < candidates.length; i++) {
-	let c = candidates[i];
-	let _cand;
-	for (let k = 0; k < word.length; k++) {
-		_cand = rotate(c, k);
-		console.log(_cand);
-		_candidates.push(_cand);
-	}
-}
+  var candidates = [];
 
-console.log(_candidates);
+  // generate all letter replacement candidates
+  for (let i = 0; i < letters.length; i++) {
+    let letter = letters[i];
+    let cand = word;
+    cand = cand.replace('_', letter);
+    candidates.push(cand);
 
-// check candidates against each word
-for (let i = 0; i < _candidates.length; i++) {
-  let c = _candidates[i];
-  for (let k = 0; k < words.length; k++) {
-  	let w = words[k];
-
-  	if (w === c) { // check if candidate equals work
-  		alert(w);
-  	}
+    // And, reverse
+    candidates.push(reverse(cand));
   }
-}
 
-// prints "hi" in the browser's dev tools console
-console.log(_candidates.length);
+  // reverse string
+  // "cat" => ['c','a','t'] => ['t','a','c'] => "tac"
+  function reverse(string) {
+    return string.split('').reverse().join('');
+  }
+
+  function rotate(string, n) {
+    if (n === 0) {
+      return string;
+    }
+    if (n < 0) {
+      return string;
+    }
+    return string.substring(n) + string.substr(0,n);
+  }
+
+  let _candidates = [];
+  for (let i = 0; i < candidates.length; i++) {
+    let c = candidates[i];
+    let _cand;
+    for (let k = 0; k < word.length; k++) {
+      _cand = rotate(c, k);
+      console.log(_cand);
+      _candidates.push(_cand);
+    }
+  }
+
+  console.log(_candidates);
+
+  var found = [];
+
+  // check candidates against each word
+  for (let i = 0; i < _candidates.length; i++) {
+    let c = _candidates[i];
+    for (let k = 0; k < words.length; k++) {
+      let w = words[k];
+
+      if (w === c) { // check if candidate equals word
+        found.push(w);
+      }
+    }
+  }
+
+  outputEl.value = found.join('\n');
+
+  console.log(_candidates.length);
+
+}
 
 </script>
 </body>
